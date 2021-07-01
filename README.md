@@ -29,102 +29,130 @@ To run the experiments, we have built Docker-based testbed. We leverage docker-c
 
 ### Scorpio Scenario
 
-Start the prototype by running docker-compose:
-```bash
-docker-compose -f scorpio-compose.yml up
-```
+1. Start the prototype by running docker-compose:
+    ```bash
+    docker-compose -f scorpio-compose.yml up
+    ```
 
-In case you are interested in running the prototype in background (kafka or scorpio logs may be annoying), use the following command:
-```bash
-docker-compose -f scorpio-compose.yml up -d
-```
+    In case you are interested in running the prototype in background (kafka or scorpio logs may be annoying), use the following command:
+    ```bash
+    docker-compose -f scorpio-compose.yml up -d
+    ```
 
-Once you are done running tests, tear the scenario down by issuing the following command - run the command twice in case the executions gets stuck at some service:
-```bash
-docker-compose -f scorpio-compose.yml down
-```
-
-To subscribe to NGSI-LD TimeSeries entities from NiFi, run the following query using the cURL command:
-```
-curl --location --request POST 'http://localhost:9090/ngsi-ld/v1/subscriptions/' \
---header 'Content-Type: application/json' \
---header 'Link: <http://context-catalog:8080/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
---data-raw '{
-    "id": "urn:ngsi-ld:Subscription:TimeSeries:scorpio-subs",
-    "type": "Subscription",
-    "entities": [{
-        "type": "TimeSeries"
-    }],
-    "notification": {
-        "endpoint": {
-            "uri": "http://nifi:18080/notify",
-            "accept": "application/json"
+2. To subscribe to NGSI-LD TimeSeries entities from NiFi, run the following query using the cURL command:
+    ```
+    curl --location --request POST 'http://localhost:9090/ngsi-ld/v1/subscriptions/' \
+    --header 'Content-Type: application/json' \
+    --header 'Link: <http://context-catalog:8080/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+    --data-raw '{
+        "id": "urn:ngsi-ld:Subscription:TimeSeries:scorpio-subs",
+        "type": "Subscription",
+        "entities": [{
+            "type": "TimeSeries"
+        }],
+        "notification": {
+            "endpoint": {
+                "uri": "http://nifi:18080/notify",
+                "accept": "application/json"
+            }
         }
-    }
-}'
-```
+    }'
+    ```
 
-To delete subscriptions to NGSI-LD TimeSeries entities from NiFi, run the following query using the cURL command:
-```
-curl --location --request DELETE 'http://localhost:9090/ngsi-ld/v1/subscriptions/urn:ngsi-ld:Subscription:TimeSeries:scorpio-subs'
-```
+    In case you need to delete the subscription to NGSI-LD TimeSeries entities from NiFi, run the following query using the cURL command:
+    ```
+    curl --location --request DELETE 'http://localhost:9090/ngsi-ld/v1/subscriptions/urn:ngsi-ld:Subscription:TimeSeries:scorpio-subs'
+    ```
+
+3.  Upload the [Prometheus-Context Broker template](nifi-templates/prometheus-broker-adapter.xml) to NiFi. Deploy the template into the canvas and follow the instructions that are included. Note that parameter context must be configured based on the Scorpio connection details.
+
+4. Once you are done running tests, tear the scenario down by issuing the following command - run the command twice in case the executions gets stuck at some service:
+    ```bash
+    docker-compose -f scorpio-compose.yml down
+    ```
 
 ### Orion-LD Scenario
 
-Start the prototype by running docker-compose:
-```bash
-docker-compose -f orion-compose.yml up
-```
+1. Start the prototype by running docker-compose:
+    ```bash
+    docker-compose -f orion-compose.yml up
+    ```
 
-In case you are interested in running the prototype in background, execute the following command:
-```bash
-docker-compose -f orion-compose.yml up -d
-```
+    In case you are interested in running the prototype in background, execute the following command:
+    ```bash
+    docker-compose -f orion-compose.yml up -d
+    ```
 
-Once you are done running tests, tear the scenario down by issuing the following command - run the command twice in case the executions gets stuck at some service:
-```bash
-docker-compose -f orion-compose.yml down
-```
-
-To subscribe to NGSI-LD TimeSeries entities from NiFi, run the following query using the cURL command:
-```
-curl --location --request POST 'http://localhost:1026/ngsi-ld/v1/subscriptions/' \
---header 'Content-Type: application/json' \
---header 'Link: <http://context-catalog:8080/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
---data-raw '{
-    "id": "urn:ngsi-ld:Subscription:TimeSeries:orion-subs",
-    "type": "Subscription",
-    "entities": [{
-        "type": "TimeSeries"
-    }],
-    "notification": {
-        "endpoint": {
-            "uri": "http://nifi:18080/notify",
-            "accept": "application/json"
+2. To subscribe to NGSI-LD TimeSeries entities from NiFi, run the following query using the cURL command:
+    ```
+    curl --location --request POST 'http://localhost:1026/ngsi-ld/v1/subscriptions/' \
+    --header 'Content-Type: application/json' \
+    --header 'Link: <http://context-catalog:8080/context.jsonld>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"' \
+    --data-raw '{
+        "id": "urn:ngsi-ld:Subscription:TimeSeries:orion-subs",
+        "type": "Subscription",
+        "entities": [{
+            "type": "TimeSeries"
+        }],
+        "notification": {
+            "endpoint": {
+                "uri": "http://nifi:18080/notify",
+                "accept": "application/json"
+            }
         }
-    }
-}'
-```
+    }'
+    ```
 
-To delete subscriptions to NGSI-LD TimeSeries entities from NiFi, run the following query using the cURL command:
-```
-curl --location --request DELETE 'http://localhost:1026/ngsi-ld/v1/subscriptions/urn:ngsi-ld:Subscription:TimeSeries:orion-subs'
-```
+    In case you need to delete the subscription to NGSI-LD TimeSeries entities from NiFi, run the following query using the cURL command:
+    ```
+    curl --location --request DELETE 'http://localhost:1026/ngsi-ld/v1/subscriptions/urn:ngsi-ld:Subscription:TimeSeries:orion-subs'
+    ```
 
-### Kafka Scenario
+3.  Upload the [Prometheus-Context Broker template](nifi-templates/prometheus-broker-adapter.xml) to NiFi. Deploy the template into the canvas and follow the instructions that are included. Note that parameter context must be configured based on the Orion-LD connection details.
 
-Start the prototype by running docker-compose:
-```bash
-docker-compose -f kafka-compose.yml up
-```
+4. Once you are done running tests, tear the scenario down by issuing the following command - run the command twice in case the executions gets stuck at some service:
+    ```bash
+    docker-compose -f orion-compose.yml down
+    ```
 
-In case you are interested in running the prototype in background (kafka logs may be annoying), use the following command:
-```bash
-docker-compose -f kafka-compose.yml up -d
-```
+### Kafka-AVRO Scenario
 
-Once you are done running tests, tear the scenario down by issuing the following command - run the command twice in case the executions gets stuck at some service:
-```bash
-docker-compose -f kafka-compose.yml down
-```
+1. Start the prototype by running docker-compose:
+    ```bash
+    docker-compose -f kafka-compose.yml up
+    ```
 
+    In case you are interested in running the prototype in background (kafka logs may be annoying), use the following command:
+    ```bash
+    docker-compose -f kafka-compose.yml up -d
+    ```
+
+2.  Upload the [Prometheus-Kafka AVRO template](nifi-templates/prometheus-kafka-avro-adapter.xml) to NiFi. Deploy the template into the canvas and follow the instructions that are included.
+
+3. Once you are done running tests, tear the scenario down by issuing the following command - run the command twice in case the executions gets stuck at some service:
+    ```bash
+    docker-compose -f kafka-compose.yml down
+    ```
+
+### Kafka-NGSI-LD Scenario
+
+1. Start the prototype by running docker-compose:
+    ```bash
+    docker-compose -f kafka-compose.yml up
+    ```
+
+    In case you are interested in running the prototype in background (kafka logs may be annoying), use the following command:
+    ```bash
+    docker-compose -f kafka-compose.yml up -d
+    ```
+
+2.  Upload the [Prometheus-Kafka NGSI-LD template](nifi-templates/prometheus-kafka-ngsi-ld-adapter.xml) to NiFi. Deploy the template into the canvas and follow the instructions that are included.
+
+3. Once you are done running tests, tear the scenario down by issuing the following command - run the command twice in case the executions gets stuck at some service:
+    ```bash
+    docker-compose -f kafka-compose.yml down
+    ```
+
+## Visualization of Results with Jupyter
+
+This repository provides a [Jupyter Notebook](Experiments.ipynb) to process and visualize the results from the experiments. To find more information on how to install and run Jupyter Notebook, please visit https://jupyter.org/install.html.
